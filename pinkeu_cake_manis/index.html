@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff2f7">
+  <title>Pinkeu Cake Manis | Sistem Penjualan & Stok</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">P<span>♥</span></div>
+        <div><h1>Pinkeu Cake</h1><p>Manis di setiap momen</p></div>
+      </div>
+      <nav class="nav-menu" aria-label="Navigasi utama">
+        <button class="nav-link active" data-page="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-link" data-page="products"><span>▣</span> Produk & Stok</button>
+        <button class="nav-link" data-page="transactions"><span>🛒</span> Transaksi</button>
+        <button class="nav-link" data-page="customers"><span>♙</span> Pelanggan</button>
+        <button class="nav-link" data-page="reports"><span>▤</span> Laporan Penjualan</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="mini-note"><span class="note-icon">✿</span><div><b>Freshly baked</b><small>Manis, lembut, istimewa.</small></div></div>
+        <p class="copyright">© 2026 Pinkeu Cake Manis</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Buka navigasi">☰</button>
+        <div><p class="eyebrow">SISTEM INFORMASI TOKO</p><h2 id="pageTitle">Dashboard</h2></div>
+        <div class="topbar-right"><span class="today-pill" id="todayLabel">Hari ini</span><div class="avatar">P</div></div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="welcome-banner">
+          <div><p class="eyebrow">HALO, PENGELOLA PINKЕU!</p><h2>Hari yang manis dimulai dari sini <span>♡</span></h2><p>Pantau penjualan, stok, dan pelanggan toko dalam satu tempat.</p></div>
+          <div class="banner-cake" aria-hidden="true">🎂</div>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon pink">Rp</div><div><p>Penjualan Hari Ini</p><h3 id="statToday">Rp0</h3><small id="statTodayCount">0 transaksi</small></div></article>
+          <article class="stat-card"><div class="stat-icon peach">▣</div><div><p>Total Produk</p><h3 id="statProducts">0</h3><small>Jenis produk terdaftar</small></div></article>
+          <article class="stat-card"><div class="stat-icon lilac">♧</div><div><p>Total Pelanggan</p><h3 id="statCustomers">0</h3><small>Data pelanggan tersimpan</small></div></article>
+          <article class="stat-card"><div class="stat-icon yellow">!</div><div><p>Stok Menipis</p><h3 id="statLowStock">0</h3><small>Produk dengan stok ≤ 5</small></div></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Ringkasan Penjualan</h3><p>Grafik penjualan 7 hari terakhir</p></div><span class="soft-tag">Mingguan</span></div><div class="chart-wrap"><canvas id="salesChart" aria-label="Grafik penjualan tujuh hari"></canvas></div></article>
+          <article class="panel"><div class="panel-heading"><div><h3>Stok Perlu Diperhatikan</h3><p>Produk dengan stok rendah</p></div><button class="text-button" data-goto="products">Lihat semua →</button></div><div id="lowStockList" class="stock-list"></div></article>
+        </div>
+        <article class="panel"><div class="panel-heading"><div><h3>Transaksi Terbaru</h3><p>Aktivitas penjualan terakhir</p></div><button class="text-button" data-goto="reports">Lihat laporan →</button></div><div class="table-wrap"><table><thead><tr><th>Kode</th><th>Tanggal</th><th>Pelanggan</th><th>Total</th><th>Metode</th></tr></thead><tbody id="recentTransactions"></tbody></table></div></article>
+      </section>
+
+      <section class="page" id="page-products">
+        <div class="section-intro"><div><h2>Produk & Stok</h2><p>Kelola daftar kue, harga jual, dan ketersediaan stok.</p></div><button class="primary-btn" id="addProductBtn">＋ Tambah Produk</button></div>
+        <div class="toolbar"><label class="search-box">⌕ <input id="productSearch" type="search" placeholder="Cari nama atau kategori produk..."></label><select id="productCategoryFilter" aria-label="Filter kategori"><option value="">Semua kategori</option><option>Cake</option><option>Pastry</option><option>Cookies</option><option>Roti</option></select><select id="stockFilter" aria-label="Filter stok"><option value="">Semua stok</option><option value="low">Stok menipis (≤ 5)</option><option value="available">Stok tersedia</option></select></div>
+        <div class="panel"><div class="table-wrap"><table><thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="productsTable"></tbody></table></div><div class="empty-state hidden" id="productsEmpty">Produk tidak ditemukan. Coba kata kunci lain atau tambahkan produk baru.</div></div>
+      </section>
+
+      <section class="page" id="page-transactions">
+        <div class="section-intro"><div><h2>Transaksi Penjualan</h2><p>Catat pesanan dan stok akan berkurang otomatis setelah transaksi disimpan.</p></div></div>
+        <div class="transaction-layout">
+          <article class="panel"><div class="panel-heading"><div><h3>Detail Pesanan</h3><p>Pilih produk dan jumlah yang dibeli.</p></div></div>
+            <div class="form-grid"><label>Pelanggan<select id="saleCustomer"></select></label><label>Metode pembayaran<select id="paymentMethod"><option>Tunai</option><option>QRIS</option><option>Transfer</option><option>Debit</option></select></label></div>
+            <div class="add-to-cart"><label>Produk<select id="saleProduct"></select></label><label>Jumlah<input id="saleQty" type="number" min="1" value="1" step="1"></label><button class="secondary-btn" id="addToCartBtn">＋ Tambah</button></div>
+            <div class="table-wrap cart-table"><table><thead><tr><th>Produk</th><th>Harga</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead><tbody id="cartTable"></tbody></table></div>
+            <div class="cart-total"><span>Total pesanan</span><strong id="cartTotal">Rp0</strong></div>
+          </article>
+          <article class="panel payment-panel"><div class="panel-heading"><div><h3>Pembayaran</h3><p>Pastikan uang diterima sesuai total.</p></div><span class="payment-emoji">💗</span></div>
+            <div class="payment-summary"><span>Total belanja</span><strong id="paymentTotal">Rp0</strong></div>
+            <label>Uang diterima (Rp)<input id="amountPaid" type="number" min="0" step="1" placeholder="Contoh: 100000"></label>
+            <div class="change-box"><span>Kembalian</span><strong id="changeDue">Rp0</strong></div>
+            <p class="helper-text" id="paymentHint">Tambahkan produk ke pesanan terlebih dahulu.</p>
+            <button class="primary-btn full-btn" id="completeSaleBtn">Simpan Transaksi</button>
+            <button class="quiet-btn full-btn" id="clearCartBtn">Kosongkan Pesanan</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="page-customers">
+        <div class="section-intro"><div><h2>Data Pelanggan</h2><p>Simpan informasi pelanggan untuk memudahkan pelayanan.</p></div><button class="primary-btn" id="addCustomerBtn">＋ Tambah Pelanggan</button></div>
+        <div class="toolbar"><label class="search-box">⌕ <input id="customerSearch" type="search" placeholder="Cari nama, telepon, atau email..."></label></div>
+        <div class="panel"><div class="table-wrap"><table><thead><tr><th>Nama</th><th>No. Telepon</th><th>Email</th><th>Alamat</th><th>Aksi</th></tr></thead><tbody id="customersTable"></tbody></table></div><div class="empty-state hidden" id="customersEmpty">Belum ada data pelanggan yang cocok.</div></div>
+      </section>
+
+      <section class="page" id="page-reports">
+        <div class="section-intro"><div><h2>Laporan Penjualan</h2><p>Periksa transaksi berdasarkan rentang tanggal dan cetak laporan.</p></div><button class="primary-btn" id="printReportBtn">▤ Cetak Laporan</button></div>
+        <div class="toolbar report-filters"><label>Dari tanggal<input type="date" id="reportStart"></label><label>Sampai tanggal<input type="date" id="reportEnd"></label><button class="secondary-btn" id="filterReportBtn">Terapkan Filter</button><button class="quiet-btn" id="resetReportBtn">Reset</button></div>
+        <div class="stats-grid report-stats"><article class="stat-card"><div class="stat-icon pink">Rp</div><div><p>Total Penjualan</p><h3 id="reportRevenue">Rp0</h3></div></article><article class="stat-card"><div class="stat-icon peach">▤</div><div><p>Jumlah Transaksi</p><h3 id="reportCount">0</h3></div></article><article class="stat-card"><div class="stat-icon lilac">♧</div><div><p>Produk Terjual</p><h3 id="reportItems">0</h3></div></article></div>
+        <div class="panel"><div class="table-wrap"><table><thead><tr><th>Kode Transaksi</th><th>Tanggal & Waktu</th><th>Pelanggan</th><th>Item</th><th>Pembayaran</th><th>Total</th><th>Detail</th></tr></thead><tbody id="reportsTable"></tbody></table></div><div class="empty-state hidden" id="reportsEmpty">Tidak ada transaksi pada rentang tanggal ini.</div></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-heading"><div><p class="eyebrow">PINKEU CAKE MANIS</p><h2 id="modalTitle">Form</h2></div><button class="icon-btn" id="closeModalBtn" aria-label="Tutup">×</button></div><form id="entityForm"><div id="modalFields" class="modal-fields"></div><p class="form-error" id="formError" role="alert"></p><div class="modal-actions"><button type="button" class="quiet-btn" id="cancelModalBtn">Batal</button><button type="submit" class="primary-btn">Simpan Data</button></div></form></section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
